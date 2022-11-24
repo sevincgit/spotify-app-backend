@@ -30,3 +30,23 @@ export const addNewPlaylist = async (req, res) => {
     });
   }
 };
+
+export const getPlaylistEntry = async (req, res) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return res.status(400).json({
+      errors: validationErrors.array(),
+    })
+  }  
+  try{
+  let playlistId = req.params.id;
+  let playlistDataFromDB = await db.one('SELECT * FROM playlists WHERE id = $1', playlistId)
+  res.status(200).json({
+  message:"playlist was found!",
+  success:true,
+  data: playlistDataFromDB
+    })
+  }catch(error){
+    console.log(error);
+  }
+}

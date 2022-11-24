@@ -13,3 +13,5 @@ export const validParametersEntry = [
   check('seed_genres').not().isEmpty().withMessage('Please select a genre').isAscii(),
   check('userid').not().isEmpty().isAscii(),
 ];
+
+export const validPathPlaylistId = [check('id').not().isEmpty().isAscii()];
