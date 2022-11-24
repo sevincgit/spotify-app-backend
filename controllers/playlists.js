@@ -36,30 +36,29 @@ export const getPlaylistEntry = async (req, res) => {
   if (!validationErrors.isEmpty()) {
     return res.status(400).json({
       errors: validationErrors.array(),
-    })
+    });
   }
-  let newPlaylist = req.body;
-  let existingPlaylistInDb = await db.any('SELECT * FROM playlists WHERE id = $1', newPlaylist.id)
+  let playlistId = req.params.id;
+  let existingPlaylistInDb = await db.any('SELECT * FROM playlists WHERE id = $1', playlistId);
   console.log('existing playlist from db', existingPlaylistInDb);
-    if (existingPlaylistInDb.length > 0) {
+  if (existingPlaylistInDb.length === 0) {
     return res.status(200).json({
-      message: 'Playlist already exists.',
+      message: 'Playlist was not created by our app.',
       data: existingPlaylistInDb,
     });
   }
-  try{
-  let playlistId = req.params.id;
-  let playlistDataFromDB = await db.one('SELECT * FROM playlists WHERE id = $1', playlistId)
-  res.status(200).json({
-  message:"playlist was found!",
-  success:true,
-  data: playlistDataFromDB
-    })
-  }catch(error){
+  try {
+    let playlistDataFromDB = await db.one('SELECT * FROM playlists WHERE id = $1', playlistId);
+    res.status(201).json({
+      message: 'playlist was found!',
+      success: true,
+      data: playlistDataFromDB,
+    });
+  } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
       errors: error.message,
     });
   }
-}
+};
