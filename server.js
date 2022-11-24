@@ -4,7 +4,7 @@ dotenv.config();
 // set up for server:
 import express from 'express';
 import corsHeaders from './middleware/cors.js';
-// import playlistsRouter from './routes/playlists.js';
+import playlistsRouter from './routes/playlists.js';
 import usersRouter from './routes/users.js';
 import { createErrorMissingPath, errorMiddleWare } from './middleware/errors.js';
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(corsHeaders);
 
 // Requests:
-// app.use('/playlists', playlistsRouter);
+app.use('/playlists', playlistsRouter);
 app.use('/users', usersRouter);
 
 //just to check if server works when it is deployed
