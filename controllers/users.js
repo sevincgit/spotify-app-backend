@@ -9,7 +9,7 @@ export const addNewUser = async (req, res) => {
     });
   }
   let newUser = req.body;
-  let existingUserInDb = await db.any('SELECT * FROM users WHERE username = $1', newUser.username);
+  let existingUserInDb = await db.any('SELECT * FROM users WHERE id = $1', newUser.id);
   console.log('existing user from db', existingUserInDb);
   if (existingUserInDb.length > 0) {
     return res.status(200).json({
