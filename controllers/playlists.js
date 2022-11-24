@@ -37,7 +37,16 @@ export const getPlaylistEntry = async (req, res) => {
     return res.status(400).json({
       errors: validationErrors.array(),
     })
-  }  
+  }
+  let newPlaylist = req.body;
+  let existingPlaylistInDb = await db.any('SELECT * FROM playlists WHERE id = $1', newPlaylist.id)
+  console.log('existing playlist from db', existingPlaylistInDb);
+    if (existingPlaylistInDb.length > 0) {
+    return res.status(200).json({
+      message: 'Playlist already exists.',
+      data: existingPlaylistInDb,
+    });
+  }
   try{
   let playlistId = req.params.id;
   let playlistDataFromDB = await db.one('SELECT * FROM playlists WHERE id = $1', playlistId)
@@ -48,5 +57,9 @@ export const getPlaylistEntry = async (req, res) => {
     })
   }catch(error){
     console.log(error);
+    res.status(500).json({
+      success: false,
+      errors: error.message,
+    });
   }
 }
