@@ -2,17 +2,20 @@ import { db } from '../database/setup.js';
 import { validationResult } from 'express-validator';
 
 export const addNewPlaylist = async (req, res) => {
-    const validationErrors = validationResult(req)
+  const validationErrors = validationResult(req);
   if (!validationErrors.isEmpty()) {
     return res.status(400).json({
-      errors: validationErrors.array()
-    })
+      errors: validationErrors.array(),
+    });
   }
-  let newPlaylist = req.body
-  console.log(req.tokenFromClient);
-//   let newPlaylistId = req.body.id
+  let newPlaylist = req.body;
+  console.log('addNewPlaylist: newPlaylist in rq body', newPlaylist);
+  //   let newPlaylistId = req.body.id
   try {
-    let newPlaylistInDB = await db.one('INSERT INTO users VALUES(${id}, ${mintempo}, ${maxtempo}, ${minpopularity}, ${maxpopularity}, ${minenergy}, ${maxenergy}, ${mindanceability}, ${maxdanceability}, ${seed_genres}, ${userid}) RETURNING *', newPlaylist);
+    let newPlaylistInDB = await db.one(
+      'INSERT INTO playlists VALUES(${id}, ${mintempo}, ${maxtempo}, ${minpopularity}, ${maxpopularity}, ${minenergy}, ${maxenergy}, ${mindanceability}, ${maxdanceability}, ${seed_genres}, ${userid}) RETURNING *',
+      newPlaylist
+    );
 
     res.status(201).json({
       success: true,
@@ -26,4 +29,4 @@ export const addNewPlaylist = async (req, res) => {
       errors: error.message,
     });
   }
-}
+};
